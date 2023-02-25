@@ -1,0 +1,9 @@
+node_modules
+# public = Images & Videos
+public/
+# db = SQLite
+db/
+# www = WEBsite
+www/
+# electron-packager
+release-builds/

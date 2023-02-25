@@ -1,0 +1,39 @@
+{
+  "name": "menu",
+  "version": "2.0.0",
+  "description": "server side to app MENU",
+  "author": "Mike Awad",
+  "main": "build/src/server",
+  "scripts": {
+    "dev": "ts-node-dev --respawn ./src/server.ts",
+    "ts": "tsc",
+    "start": "npm run ts && electron .",
+    "e": "electron ."
+  },
+  "keywords": [
+    "Express",
+    "Socket IO",
+    "SQLite"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "address": "^1.2.2",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "sequelize": "^6.28.2",
+    "sharp": "^0.31.3",
+    "socket.io": "^4.6.1",
+    "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/express": "^4.17.17",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^18.14.1",
+    "@types/sharp": "^0.31.1",
+    "electron": "^23.1.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.5"
+  }
+}
