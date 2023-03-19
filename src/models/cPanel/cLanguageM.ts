@@ -2,11 +2,14 @@
 // ===== Language ===== //
 // ==================== //
 
-// Language Table
-// Default Language for APP
-// Multiple Language use || not use in APP
-// Direction Left => Right // Right => Left
-// DataBase
+/**
+ * Language Table
+ * Default Language for APP
+ * Multiple Language use || not use in APP
+ * Direction Left => Right // Right => Left
+ * DataBase
+ */
+
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 

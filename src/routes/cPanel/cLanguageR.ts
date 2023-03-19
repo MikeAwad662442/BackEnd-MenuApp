@@ -3,7 +3,7 @@
 // =================== //
 import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
-import { C_Language } from "../../models/cPanel/cLanguageM";
+// import { C_Language } from "../../models/cPanel/cLanguageM";
 import {
   langActive,
   langGet,
@@ -19,22 +19,23 @@ LanguageRouter.route("/")
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const record = await langGet();
-        return res.json(record);
+        const cLangGet = await langGet();
+        return res.json(cLangGet);
       } catch (e) {
         return res.json(e);
       }
     }
   )
+  // UpDut
   .put(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      console.log(req.body);
-      // const update = req.body;
-
+      // // === Console LOG === //
+      // console.log(req.body);
+      // // === Console LOG === //
       try {
-        const record = await langUpdate(req.body);
-        return res.json(record);
+        const cLangUpdate = await langUpdate(req.body);
+        return res.json(cLangUpdate);
       } catch (e) {
         return res.json(e);
       }
@@ -47,8 +48,8 @@ LanguageRouter.route("/langActive")
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const record = await langActive();
-        return res.json(record);
+        const cLangActive = await langActive();
+        return res.json(cLangActive);
       } catch (e) {
         return res.json(e);
       }

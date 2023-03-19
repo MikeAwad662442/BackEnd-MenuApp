@@ -17,17 +17,17 @@ const langGet = async () => {
 };
 // === Get All Languages Info === //
 // === Update All Languages Info === //
-const langUpdate = async (res: any) => {
-  console.log("Language Insert ::", res);
+const langUpdate = async (res: Language[]) => {
+  console.log("Language Insert ::", res.length);
   let newRes: any;
   try {
     const getLanguage = await C_Language.findAll();
     if (getLanguage.length === 0) {
-      res.forEach((data: any) => {
+      res.forEach((data: Language) => {
         C_Language.create(data);
       });
     } else {
-      res.forEach((data: any) => {
+      res.forEach((data: Language) => {
         C_Language.update(data, { where: { id: data.id } });
       });
     }
