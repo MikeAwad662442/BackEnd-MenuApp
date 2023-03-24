@@ -5,9 +5,10 @@ import multer from "multer";
 import path from "path";
 import sharp from "sharp"; // === For Comprise Images
 import fs from "fs";
+import { json } from "sequelize";
 // === Static INFO === //
 const LinkServer = "./public/gallery";
-const LinkDB = "/gallery";
+// const LinkDB = "/gallery";
 // === Static INFO === //
 // === Stor Upload File in Server Storage File === //
 const storage = multer.diskStorage({
@@ -43,8 +44,8 @@ const fileUp = multer({ storage: storage });
 // === Video Store === //
 // ==== Delete IMG ==== //
 function DeleteIMG(imgDelete: string) {
-  // const path = `${LinkServer}/${imgDelete}`;
-  const path = `./public${imgDelete}`;
+  const path = `${LinkServer}/${imgDelete}`;
+  // const path = `./public${imgDelete}`;
   try {
     fs.unlinkSync(path); //file removed
   } catch (err) {
@@ -71,10 +72,11 @@ function fileDB(fileReQ: any, bodyREQ: any, imgType: string) {
     // [1645211075347.png] //
     const webp = IMG.split(".").shift(); // remove the type of image
     // [1645211075347] //
-    const IMGwebp = `${webp}.webp`; // make image type WEBP
+    const IMGwebp = `1${webp}.webp`; // make image type WEBP
     // === Resize IMAGES === //
     if (type === "image") {
-      var NewIMG = `${LinkDB}/${IMGwebp}`; // Send the Path\image to DB
+      // var NewIMG = `${LinkDB}/${IMGwebp}`; // Send the Path\image to DB
+      var NewIMG = `${IMGwebp}`; // Send the Path\image to DB
       sharp(`${LinkServer}/${IMG}`)
         .webp()
         // === Upload IMAGE to File === //
@@ -85,6 +87,9 @@ function fileDB(fileReQ: any, bodyREQ: any, imgType: string) {
             console.log(
               "Error " + `${LinkServer}/${IMGwebp}` + " " + err.toString()
             );
+            return json(
+              "Error " + `${LinkServer}/${IMGwebp}` + " " + err.toString()
+            );
           } else {
             sharp.cache({ memory: 0, files: 0, items: 0 });
             fs.unlinkSync(`${LinkServer}/${IMG}`); //file removed
@@ -93,74 +98,16 @@ function fileDB(fileReQ: any, bodyREQ: any, imgType: string) {
       // === Upload IMAGE to File === //
       return NewIMG; // Send the Path\image to DB
     } else {
-      return `${LinkDB}/${IMG}`; // if Upload File id VIDEO Send the Path\image to DB
+      // return `${LinkDB}/${IMG}`; // if Upload File id VIDEO Send the Path\image to DB
+      return `${IMG}`; // if Upload File id VIDEO Send the Path\image to DB
     }
     // === Resize IMAGES === //
   } else if (bodyREQ !== undefined) {
-    IMG = `${LinkDB}/${bodyREQ}`;
+    // IMG = `${LinkDB}/${bodyREQ}`;
+    IMG = `${bodyREQ}`;
     return IMG;
   }
 }
-// ========================================================= //
-// = to Get IMAGES File PATH and SPLIT to SAVE in DataBase = //
-// ========================================================= //
-// // ================= Image resize by SHARP ================= //
-// // ========================================================= //
-// function DeleteResize(path: any, imgType: string) {
-//     var type = imgType;
-// // === Delete Original IMAGES === //
-//   if (type === 'image') {
-//       fs.unlinkSync(path);  //file removed
-//   }
-// // === Delete Original IMAGES === //
-//   }
-// // ========================================================= //
-// // ================= Image resize by SHARP ================= //
-// // ========================================================= //
-// === SOCKET.IO === //
-const tempFile = async (upFile: string, saveFile: any, type: string) => {
-  //   try {
-  //     if (!fs.existsSync(upFile)){
-  //       fs.mkdirSync(upFile,{recursive: true});
-  //     }
-  //     fs.writeFileSync(`${upFile}/${saveFile}`,saveFile)
-  //       //     fs.writeFile(upFile,saveFile,(error) => {
-  //       // // console.log({ message: err ? "failure" : "success" });
-  //       //        console.error(error)
-  //       // })
-  // // // === Resize IMAGES === //
-  //     if (type === 'image') {
-  //      var NewIMG = 1 + saveFile;
-  //   sharp(`${upFile}/${saveFile}`)
-  //         // .resize(300, 300, { fit: "contain" })
-  //     .webp()
-  // // === Upload IMAGE to File === //
-  //     .toFile(`${upFile}/${NewIMG}`, (err) => {
-  //       if (err) {
-  //         console.log('Error ' + `${upFile}/${NewIMG}` + ' ' + err.toString());
-  //       } else {
-  //         sharp.cache({ memory: 0, files: 0, items: 0 })
-  //         fs.unlinkSync(`${upFile}/${saveFile}`);  //file removed
-  //       }
-  //     })
-  // // === Upload IMAGE to File === //
-  //       return NewIMG;
-  //     } else {
-  //       return saveFile;
-  //     }
-  //   }catch (e) {
-  //         console.error(e)
-  //       }
-
-  //   // save the content to the disk, for example
-  //   // console.log('image', image)
-  //   // console.log('saveFile', saveFile)
-  //     // fs.writeFile(upFile, saveFile, (err) => {
-  //     //   console.log({ message: err ? "failure" : "success" });
-  //     // });
-  console.log("upFile:", upFile);
-  console.log("saveFile:", saveFile);
-};
 // === EXPORT === //
 // export {publicFile, IMGup, fileUp, DeleteIMG, fileDB, DeleteResize,tempFile };
 export { IMGup, fileUp, DeleteIMG, fileDB };

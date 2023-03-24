@@ -5,30 +5,34 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 export interface QR {
+  id: any;
   wifiName: string;
-  wifiImage: string;
+  // wifiImage: string;
   wifiPass: string;
   wifiType: string;
   wifiHidden: boolean;
   serverURL: string;
 }
 
-export class C_QR extends Model<QR> {
-  toJSON() {
-    return { ...this.get(), id: undefined };
-  }
-}
+export class C_QR extends Model<QR> {}
 
 C_QR.init(
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      unique: true,
+      allowNull: false,
+    },
     wifiName: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    wifiImage: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
+    // wifiImage: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: true,
+    // },
     wifiPass: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -39,7 +43,7 @@ C_QR.init(
     },
     wifiHidden: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      defaultValue: false,
     },
     serverURL: {
       type: DataTypes.TEXT,

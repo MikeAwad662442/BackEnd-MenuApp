@@ -26,7 +26,7 @@ LanguageRouter.route("/")
       }
     }
   )
-  // UpDut
+  // Update
   .put(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {

@@ -30,7 +30,7 @@ SocialMediaRouter.route("/")
       }
     }
   )
-  // UpDut
+  // Update
   .put(
     corsWithOptions,
     IMGup.single("File"),
@@ -57,7 +57,7 @@ SocialMediaRouter.route("/")
           FacilityImageType
         );
         if (cSocialUpdate === true && cFacilityGet === true) {
-          console.log("IF everything work well");
+          // console.log("IF everything work well");
           return res.json(true);
         }
       } catch (e) {

@@ -46,7 +46,7 @@ const langActive = async () => {
   try {
     const getLanguages = await C_Language.findAll({ where: { active } });
     newRes = getLanguages;
-    console.log(newRes);
+    // console.log(newRes);
   } catch (e) {
     newRes = e;
   }
