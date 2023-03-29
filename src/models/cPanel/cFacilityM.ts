@@ -15,12 +15,7 @@ import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 import { SocialMedia } from "./cSocialMediaM";
 
-export interface Facility {
-  id: any;
-  name: string;
-  image: string;
-  imgType: string;
-}
+// === Group Facility Info & SocialMedia Info === //
 export interface FacilityInfo {
   FacilityID: any;
   FacilityName: string;
@@ -28,6 +23,14 @@ export interface FacilityInfo {
   FacilityImageType: string;
   upSocialMedia: [SocialMedia];
 }
+// === Group Facility Info & SocialMedia Info === //
+export interface Facility {
+  id: any;
+  name: string;
+  image: string;
+  imgType: string;
+}
+
 export class C_Facility extends Model<Facility> {}
 
 C_Facility.init(

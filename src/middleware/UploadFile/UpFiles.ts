@@ -63,6 +63,11 @@ function DeleteIMG(imgDelete: string) {
 // ========================================================= //
 // .split(path.sep); // Get PATH & Split To ARRAY
 function fileDB(fileReQ: any, bodyREQ: any, imgType: string) {
+  // === Console LOG === //
+  console.log("IMG DB:", fileReQ);
+  console.log("imgType", imgType);
+  console.log("bodyREQ", bodyREQ);
+  // === Console LOG === //
   var type = imgType;
   var IMG: any;
   if (fileReQ !== undefined) {

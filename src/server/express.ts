@@ -18,9 +18,9 @@ exp
 // // EventsRouter
 // import { ItemTypeRouter } from "../routes/item/itemTypeR";
 // exp.use("/itemtype", ItemTypeRouter);
-// // EventsRouter
-// import { EventsRouter } from "../routes/events/eventsR";
-// exp.use("/events", EventsRouter);
+// EventsRouter
+import { EventsRouter } from "../routes/events/eventsR";
+exp.use("/events", EventsRouter);
 // === cPanel === //
 // LanguageRouter
 import { LanguageRouter } from "../routes/cPanel/cLanguageR";
