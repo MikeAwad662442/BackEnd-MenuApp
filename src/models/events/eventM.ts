@@ -5,29 +5,7 @@
 // interface to Events Table
 // == id / icon / link / active
 
-import {
-  Association,
-  DataTypes,
-  HasManyAddAssociationMixin,
-  HasManyCountAssociationsMixin,
-  HasManyCreateAssociationMixin,
-  HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
-  HasManySetAssociationsMixin,
-  HasManyAddAssociationsMixin,
-  HasManyHasAssociationsMixin,
-  HasManyRemoveAssociationMixin,
-  HasManyRemoveAssociationsMixin,
-  Model,
-  ModelDefined,
-  Optional,
-  Sequelize,
-  InferAttributes,
-  InferCreationAttributes,
-  CreationOptional,
-  NonAttribute,
-  ForeignKey,
-} from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 
 // === Group Events & Language === //
@@ -47,6 +25,7 @@ export interface Events {
   imgType: string;
   active: boolean;
 }
+
 export class V_Events extends Model<Events> {}
 V_Events.init(
   {
@@ -80,8 +59,8 @@ V_Events.init(
   }
 );
 // V_Events.sync({ alter: true })
-
 // === Events DB === //
+
 // === EventsLanguage DB === //
 export interface EventsLanguage {
   id: any;
@@ -101,7 +80,7 @@ V_EventsLanguage.init(
       allowNull: false,
     },
     EventID: {
-      type: DataTypes.TEXT,
+      type: DataTypes.UUID,
       unique: false,
       allowNull: true,
     },
@@ -128,5 +107,14 @@ V_EventsLanguage.init(
 );
 // === EventsLanguage DB === //
 
-V_Events.hasMany(V_EventsLanguage);
-V_EventsLanguage.belongsTo(V_Events);
+V_Events.hasMany(V_EventsLanguage, {
+  as: "info",
+  foreignKey: "EventID",
+  sourceKey: "id",
+  onDelete: "RESTRICT",
+  onUpdate: "RESTRICT",
+});
+V_EventsLanguage.belongsTo(V_Events, {
+  foreignKey: "EventID",
+  targetKey: "id",
+});

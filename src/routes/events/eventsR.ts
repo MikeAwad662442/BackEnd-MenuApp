@@ -43,8 +43,13 @@ EventsRouter.route("/")
       // console.log("infoArray", EventsInfoArray);
       // // === Console LOG === //
       try {
-        await eventUpdate(IMG, EventsImageType, EventsActive, EventsInfoArray);
-        return res.json("True"); // True/False
+        const EventUpdate = await eventUpdate(
+          IMG,
+          EventsImageType,
+          EventsActive,
+          EventsInfoArray
+        );
+        return res.json(EventUpdate); // True/False
       } catch (e) {
         return res.json(e);
       }
@@ -57,7 +62,27 @@ EventsRouter.route("/:lang")
     async (req: Request, res: Response, next: NextFunction) => {
       const eventsLang = req.params.lang;
       // === Console LOG === //
-      console.log("eventsLang ::", eventsLang);
+      // console.log("eventsLang ::", eventsLang);
+      // === Console LOG === //
+      try {
+        const eventsGat = await eventsGatAll(eventsLang);
+        // === Console LOG === //
+        console.log("eventsGat ::", eventsGat);
+        // === Console LOG === //
+        return res.json(eventsGat);
+      } catch (e) {
+        return res.json(e);
+      }
+    }
+  );
+EventsRouter.route("/:lang/:ID")
+  // GET
+  .get(
+    corsWithOptions,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const eventsLang = req.params.lang;
+      // === Console LOG === //
+      // console.log("eventsLang ::", eventsLang);
       // === Console LOG === //
       try {
         const eventsGat = await eventsGatAll(eventsLang);

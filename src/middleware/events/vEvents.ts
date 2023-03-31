@@ -1,32 +1,29 @@
 import {
-  Events,
   EventsLanguage,
   V_Events,
   V_EventsLanguage,
 } from "../../models/events/eventM";
+
 // === Get All Events List Info === //
 const eventsGatAll = async (lang: string) => {
-  console.log("eventsLang 2::", lang);
   let newRes: any;
   try {
-    const getEvent = await V_Events.findAll({
+    const getEvents = await V_Events.findAll({
       include: {
         model: V_EventsLanguage,
-        // required: true,
+        as: "info",
+        attributes: ["lang", "name"], // Get just this Column
         where: { lang: lang },
+        required: true,
       },
-    }).then((res) => {
-      console.log("V_Events ::", res);
-      return (newRes = res);
     });
-    console.log(getEvent);
+    newRes = getEvents;
   } catch (e) {
     newRes = e;
   }
   return newRes; // === Send Events Data to Front
 };
 // === Get All Events List Info === //
-//  await eventUpdate( IMG, imgType, active, infoArray)
 const eventUpdate = async (
   IMG: string,
   imgType: string,
@@ -67,12 +64,8 @@ const eventUpdate = async (
               console.log(e);
             }
           });
-
-          // LangGlobal.bulkCreate(NewLang)
-          //    console.log('NewLang', NewLang);
         }
         console.log("LangArray", infoArray);
-        // console.log("newEvent.id:", eventID);
       })
       .then((res) => {
         console.log("V_Events finally ::", res);
