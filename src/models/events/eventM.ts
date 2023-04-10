@@ -46,7 +46,7 @@ V_Events.init(
       allowNull: true,
     },
     active: {
-      type: DataTypes.TEXT,
+      type: DataTypes.BOOLEAN,
       allowNull: true,
     },
   },
