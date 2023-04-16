@@ -98,20 +98,20 @@ const eventUpdateID = async (
           active: active,
         });
         updateEventID?.save().then((EventIDLang: V_Events) => {
-          console.log("From Event Table to lang ::", EventIDLang);
-          const EventID = EventIDLang.dataValues.id;
+          // console.log("From Event Table to lang ::", EventIDLang);
+          const EventID = EventIDLang.getDataValue("id");
           EventsInfoArray.forEach(async (data: EventsLanguage) => {
             try {
-              await V_EventsLanguage.findOne({ where: { id: data.id } }).then(
-                (res: V_EventsLanguage | null) => {
-                  res?.set({
-                    lang: data.lang,
-                    name: data.name,
-                    description: data.description,
-                  });
-                  res?.save();
-                }
-              );
+              await V_EventsLanguage.findOne({
+                where: { id: data.id, EventID: EventID },
+              }).then((res: V_EventsLanguage | null) => {
+                res?.set({
+                  lang: data.lang,
+                  name: data.name,
+                  description: data.description,
+                });
+                res?.save();
+              });
             } catch (e) {
               newRes = e;
             }
@@ -174,6 +174,73 @@ const eventUpdate = async (
 };
 // === Insert New Event  === //
 /** GET & UPDATE UPDATE page **/
+/** Delete All & ByID **/
+const eventDelete = async (id: string) => {
+  console.log("Delete ID ::", id);
+  let newRes: any;
+  if (id === undefined) {
+    try {
+      await V_Events.findAll().then(
+        async (DeleteEventID: V_Events[] | null) => {
+          DeleteEventID?.forEach(async (data: V_Events) => {
+            console.log("image ::", DeleteEventID);
+            const EventID = data?.getDataValue("id");
+            try {
+              // === check if FILE is same || new FILE is set
+              if (data?.getDataValue("image") !== null) {
+                const deleteFile: any = data?.getDataValue("image");
+                DeleteIMG(deleteFile); // === delete Old Image === //
+              }
+              await V_EventsLanguage.destroy({
+                where: { EventID: EventID },
+              });
+              await V_Events.destroy({ where: { id: EventID } });
+              newRes = true;
+            } catch (e) {
+              newRes = e;
+            }
+          });
+        }
+      );
+    } catch (e) {
+      newRes = e;
+    }
+  } else {
+    try {
+      await V_Events.findOne({
+        where: { id: id },
+      }).then(async (DeleteEventID: V_Events | null) => {
+        console.log("image ::", DeleteEventID);
+        const EventID = DeleteEventID?.getDataValue("id");
+        try {
+          // === check if FILE is same || new FILE is set
+          if (DeleteEventID?.getDataValue("image") !== null) {
+            const deleteFile: any = DeleteEventID?.getDataValue("image");
+            DeleteIMG(deleteFile); // === delete Old Image === //
+          }
+          await V_EventsLanguage.destroy({ where: { EventID: EventID } });
+          await V_Events.destroy({ where: { id: EventID } });
+          newRes = true;
+        } catch (e) {
+          newRes = e;
+        }
+      });
+    } catch (e) {
+      newRes = e;
+    }
+  }
+
+  //   console.log("Event Update ::", newRes)
+  return newRes; // === Send true || errors
+};
+/** Delete All & ByID **/
 // === Export Function === //
-export { eventsGatAll, eventGat, eventUpdate, eventUpdateID, eventGetUpdateID };
+export {
+  eventsGatAll,
+  eventGat,
+  eventUpdate,
+  eventUpdateID,
+  eventGetUpdateID,
+  eventDelete,
+};
 // === Export Function === //

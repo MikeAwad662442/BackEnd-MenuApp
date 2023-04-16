@@ -18,6 +18,7 @@ import {
   eventUpdateID,
   eventUpdate,
   eventGetUpdateID,
+  eventDelete,
 } from "../../middleware/events/vEvents";
 // =================== //
 import { EventsFull } from "../../models/events/eventM";
@@ -83,14 +84,14 @@ EventsRouter.route("/Update/:ID")
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const params = req.params;
-      const eventID = req.params.ID;
+      // const params = req.params;
+      const EventID = req.params.ID;
       // // === Console LOG === //
       // console.log("params ::", params);
       // console.log("eventID ::", eventID);
       // // === Console LOG === //
       try {
-        const eventsGat = await eventGetUpdateID(eventID);
+        const eventsGat = await eventGetUpdateID(EventID);
         // // === Console LOG === //
         // console.log("eventsGat ::", eventsGat);
         // // === Console LOG === //
@@ -133,6 +134,26 @@ EventsRouter.route("/Update/:ID")
         return res.json(e);
       }
     }
+  )
+  // Delete
+  .delete(
+    corsWithOptions,
+    // TokenCheck,
+    // ifAdmin,
+    async (req: Request, res: Response, next: NextFunction) => {
+      // const params = req.params;
+      const EventID = req.params.ID;
+      // // === Console LOG === //
+      // console.log("params ::", params);
+      // console.log("eventID ::", EventID);
+      // // === Console LOG === //
+      try {
+        const DeleteEvent = await eventDelete(EventID);
+        return res.json(DeleteEvent); // True/False
+      } catch (e) {
+        return res.json(e);
+      }
+    }
   );
 EventsRouter.route("/Update")
   // Update
@@ -163,6 +184,21 @@ EventsRouter.route("/Update")
           EventsInfoArray
         );
         return res.json(EventUpdate); // True/False
+      } catch (e) {
+        return res.json(e);
+      }
+    }
+  )
+  // Delete
+  .delete(
+    corsWithOptions,
+    // TokenCheck,
+    // ifAdmin,
+    async (req: Request, res: Response, next: NextFunction) => {
+      console.log("Delete All Events");
+      const EventID = req.params.ID;
+      try {
+        await eventDelete(EventID);
       } catch (e) {
         return res.json(e);
       }

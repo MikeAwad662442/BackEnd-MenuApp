@@ -5,7 +5,7 @@
 // interface to Events Table
 // == id / icon / link / active
 
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 
 // === Group Events & Language === //
@@ -21,6 +21,7 @@ export interface EventsFull {
 // === Events DB === //
 export interface Events {
   id: any;
+  listNum: any;
   image: string;
   imgType: string;
   active: boolean;
@@ -35,6 +36,12 @@ V_Events.init(
       primaryKey: true,
       unique: true,
       allowNull: false,
+    },
+    listNum: {
+      type: DataTypes.DECIMAL(1, 4).ZEROFILL,
+      autoIncrement: true,
+      unique: true,
+      allowNull: true,
     },
     image: {
       type: DataTypes.TEXT,
