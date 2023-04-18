@@ -19,9 +19,10 @@ import {
   eventUpdate,
   eventGetUpdateID,
   eventDelete,
+  eventOrderList,
 } from "../../middleware/events/vEvents";
 // =================== //
-import { EventsFull } from "../../models/events/eventM";
+import { Events, EventsFull, V_Events } from "../../models/events/eventM";
 // =================== //
 // =================== //
 const EventsRouter = express.Router();
@@ -198,12 +199,32 @@ EventsRouter.route("/Update")
       console.log("Delete All Events");
       const EventID = req.params.ID;
       try {
-        await eventDelete(EventID);
+        const DeleteEvent = await eventDelete(EventID);
+        return res.json(DeleteEvent); // True/False
       } catch (e) {
         return res.json(e);
       }
     }
   );
 /** GET & UPDATE UPDATE page **/
+EventsRouter.route("/OrderList")
+  // Update
+  .put(
+    corsWithOptions,
+    // TokenCheck,
+    // ifAdmin,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const EventsFull: Events[] = req.body;
+      // // === Console LOG === //
+      // console.log("req.body", req.body);
+      // // === Console LOG === //
+      try {
+        const EventOrderList = await eventOrderList(EventsFull);
+        return res.json(EventOrderList); // True/False
+      } catch (e) {
+        return res.json(e);
+      }
+    }
+  );
 // === Export Event Router === //
 export { EventsRouter };

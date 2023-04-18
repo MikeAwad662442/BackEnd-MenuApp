@@ -18,7 +18,7 @@ const langGet = async () => {
 // === Get All Languages Info === //
 // === Update All Languages Info === //
 const langUpdate = async (res: Language[]) => {
-  console.log("Language Insert ::", res.length);
+  // console.log("Language Insert ::", res.length);
   let newRes: any;
   try {
     const getLanguage = await C_Language.findAll();

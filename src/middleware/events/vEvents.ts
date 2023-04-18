@@ -1,4 +1,6 @@
 import {
+  Events,
+  EventsFull,
   EventsLanguage,
   V_Events,
   V_EventsLanguage,
@@ -17,6 +19,7 @@ const eventsGatAll = async (lang: string) => {
         where: { lang: lang },
         required: true,
       },
+      order: [["listNum", "ASC"]],
     });
     newRes = getEvents;
   } catch (e) {
@@ -97,6 +100,7 @@ const eventUpdateID = async (
           imgType: imgType,
           active: active,
         });
+        // === Update DB === //
         updateEventID?.save().then((EventIDLang: V_Events) => {
           // console.log("From Event Table to lang ::", EventIDLang);
           const EventID = EventIDLang.getDataValue("id");
@@ -143,8 +147,12 @@ const eventUpdate = async (
   // console.log("infoArray", EventsInfoArray);
   // // === Console LOG === //
   let newRes: any;
+  // Get Number of Rows in the Table
+  let RowNum: number = await V_Events.count();
+  console.log(RowNum);
   try {
     await V_Events.create({
+      listNum: ++RowNum,
       image: IMG,
       imgType: imgType,
       active: active,
@@ -176,14 +184,14 @@ const eventUpdate = async (
 /** GET & UPDATE UPDATE page **/
 /** Delete All & ByID **/
 const eventDelete = async (id: string) => {
-  console.log("Delete ID ::", id);
+  // console.log("Delete ID ::", id);
   let newRes: any;
   if (id === undefined) {
     try {
       await V_Events.findAll().then(
         async (DeleteEventID: V_Events[] | null) => {
           DeleteEventID?.forEach(async (data: V_Events) => {
-            console.log("image ::", DeleteEventID);
+            // console.log("image ::", DeleteEventID);
             const EventID = data?.getDataValue("id");
             try {
               // === check if FILE is same || new FILE is set
@@ -210,7 +218,7 @@ const eventDelete = async (id: string) => {
       await V_Events.findOne({
         where: { id: id },
       }).then(async (DeleteEventID: V_Events | null) => {
-        console.log("image ::", DeleteEventID);
+        // console.log("image ::", DeleteEventID);
         const EventID = DeleteEventID?.getDataValue("id");
         try {
           // === check if FILE is same || new FILE is set
@@ -234,6 +242,23 @@ const eventDelete = async (id: string) => {
   return newRes; // === Send true || errors
 };
 /** Delete All & ByID **/
+const eventOrderList = async (NewList: Events[]) => {
+  let newRes: any;
+  try {
+    NewList.forEach(async (UpdateList: Events) => {
+      // === Console LOG === //
+      console.log("UpdateList ::", UpdateList.id);
+      // === Console LOG === //
+      await V_Events.update(
+        { listNum: UpdateList.listNum },
+        { where: { id: UpdateList.id } }
+      );
+    });
+    newRes = true;
+  } catch (e) {
+    newRes = e;
+  }
+};
 // === Export Function === //
 export {
   eventsGatAll,
@@ -242,5 +267,6 @@ export {
   eventUpdateID,
   eventGetUpdateID,
   eventDelete,
+  eventOrderList,
 };
 // === Export Function === //

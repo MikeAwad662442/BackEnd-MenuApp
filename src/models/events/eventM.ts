@@ -38,15 +38,13 @@ V_Events.init(
       allowNull: false,
     },
     listNum: {
-      type: DataTypes.DECIMAL(1, 4).ZEROFILL,
-      autoIncrement: true,
-      unique: true,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     image: {
       type: DataTypes.TEXT,
       unique: false,
-      allowNull: true,
+      allowNull: false,
     },
     imgType: {
       type: DataTypes.TEXT,
@@ -112,8 +110,8 @@ V_EventsLanguage.init(
     updatedAt: false,
   }
 );
+// V_EventsLanguage.sync({ alter: true })
 // === EventsLanguage DB === //
-
 V_Events.hasMany(V_EventsLanguage, {
   as: "info",
   foreignKey: "EventID",

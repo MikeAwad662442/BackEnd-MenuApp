@@ -7,7 +7,6 @@ const facilityGet = async () => {
   try {
     const getLanguages = await C_Facility.findAll();
     newRes = getLanguages;
-    // console.log(newRes);
   } catch (e) {
     newRes = e;
   }
@@ -24,7 +23,6 @@ const facilityUpdate = async (
   let newRes: any;
   try {
     const getFacility = await C_Facility.findAll();
-    // console.log("C_Facility DB ::", getFacility);
     if (getFacility.length === 0) {
       await C_Facility.create({ name: name, image: image, imgType: imgType });
     } else {
