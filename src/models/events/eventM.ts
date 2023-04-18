@@ -2,8 +2,14 @@
 // ==== Events === //
 // =============== //
 
-// interface to Events Table
-// == id / icon / link / active
+/**
+ * EVENTS && EVENTS Languages Tables
+ * GET / UPDATE / INSERT / DELETE
+ * ORDER LIST for Events
+ * Active Event || Not
+ * Note :: For Event,
+ *      the Name of Event must be included but Body isn't required
+ */
 
 import { CreationOptional, DataTypes, Model } from "sequelize";
 import db from "../../config/db";
@@ -111,7 +117,11 @@ V_EventsLanguage.init(
   }
 );
 // V_EventsLanguage.sync({ alter: true })
+
 // === EventsLanguage DB === //
+/**
+ * Used to Get Info from Both Tables
+ */
 V_Events.hasMany(V_EventsLanguage, {
   as: "info",
   foreignKey: "EventID",

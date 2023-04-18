@@ -21,7 +21,7 @@ exp
 // EventsRouter
 import { EventsRouter } from "../routes/events/eventsR";
 exp.use("/events", EventsRouter);
-// === cPanel === //
+// *** cPanel *** //
 // LanguageRouter
 import { LanguageRouter } from "../routes/cPanel/cLanguageR";
 exp.use("/language", LanguageRouter);
@@ -31,7 +31,7 @@ exp.use("/social", SocialMediaRouter);
 // QR Server
 import { QR } from "../routes/cPanel/cQR_R";
 exp.use("/qr", QR);
-// === cPanel === //
+// *** cPanel *** //
 // === Routes === //
 // === Front === //
 exp.get("*", corsWithOptions, (req: Request, res: Response) => {

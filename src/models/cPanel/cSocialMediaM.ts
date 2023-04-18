@@ -2,8 +2,11 @@
 // === Social Media === //
 // ==================== //
 
-// interface to Social Media Table
-// == id / icon / link / active
+/**
+ * SocialMedia Table
+ * add Social Media Icon && Links
+ * Frond Page have SocialMedia && Facility
+ */
 
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";

@@ -1,26 +1,31 @@
 // =================== //
 // === Language ====== //
 // =================== //
+/**
+ * Language Table
+ * Default Language for APP
+ * Multiple Language use || not use in APP
+ * Direction Left => Right // Right => Left
+ * DataBase
+ */
+
 import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
-// import { C_Language } from "../../models/cPanel/cLanguageM";
 import {
   langActive,
   langGet,
   langUpdate,
 } from "../../middleware/cPanel/cLanguage";
 const LanguageRouter = express.Router();
-// =================== //
-// === Global path === //
-// =================== //
 LanguageRouter.route("/")
   // GET
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const cLangGet = await langGet();
-        return res.json(cLangGet);
+        await langGet().then((cLangGet) => {
+          return res.json(cLangGet);
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -34,8 +39,9 @@ LanguageRouter.route("/")
       // console.log(req.body);
       // // === Console LOG === //
       try {
-        const cLangUpdate = await langUpdate(req.body);
-        return res.json(cLangUpdate);
+        await langUpdate(req.body).then((cLangUpdate) => {
+          return res.json(cLangUpdate);
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -48,8 +54,9 @@ LanguageRouter.route("/langActive")
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const cLangActive = await langActive();
-        return res.json(cLangActive);
+        await langActive().then((cLangActive) => {
+          return res.json(cLangActive);
+        });
       } catch (e) {
         return res.json(e);
       }

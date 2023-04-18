@@ -1,15 +1,20 @@
 // =================== //
 // === QR Server ===== //
 // =================== //
+
+/**
+ * QR Table
+ * Import Facility LOGO
+ * WIFI Info
+ * Update INFO && PRINT
+ */
+
 import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
 import { qrGet, qrUpdate } from "../../middleware/cPanel/cQR";
 import { facilityGet } from "../../middleware/cPanel/cFacility";
 import { QR } from "../../models/cPanel/cQR_M";
 const QR = express.Router();
-// =================== //
-// === Global path === //
-// =================== //
 QR.route("/")
   // Get
   .get(
@@ -31,12 +36,10 @@ QR.route("/")
   .put(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      // === Console LOG === //
-      // console.log("QRinfo :", req.body);
-      // === Console LOG === //
       try {
-        const cQrUpdate = await qrUpdate(req.body);
-        return res.json(cQrUpdate);
+        await qrUpdate(req.body).then((cQrUpdate) => {
+          return res.json(cQrUpdate);
+        });
       } catch (e) {
         return res.json(e);
       }

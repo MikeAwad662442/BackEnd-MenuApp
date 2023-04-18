@@ -1,52 +1,43 @@
-// ======================================= //
-// === Add & Import the Events =========== //
-// === that Happening in the Location ==== //
-// ======================================= //
-import express, { Request, Response, NextFunction, response } from "express";
-// =================== //
+// =============== //
+// ==== Events === //
+// =============== //
+
+/**
+ * EVENTS && EVENTS Languages Tables
+ * GET / UPDATE / INSERT / DELETE
+ * ORDER LIST for Events
+ * Active Event || Not
+ * Note :: For Event,
+ *      the Name of Event must be included but Body isn't required
+ */
+
+import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
-// =================== //
-import {
-  IMGup,
-  fileUp,
-  DeleteIMG,
-  fileDB,
-} from "../../middleware/UploadFile/UpFiles";
+import { fileUp, fileDB } from "../../middleware/UploadFile/UpFiles";
 import {
   eventGat,
   eventsGatAll,
   eventUpdateID,
-  eventUpdate,
   eventGetUpdateID,
   eventDelete,
   eventOrderList,
+  eventNew,
 } from "../../middleware/events/vEvents";
-// =================== //
 import { Events, EventsFull, V_Events } from "../../models/events/eventM";
-// =================== //
-// =================== //
+
 const EventsRouter = express.Router();
-// =================== //
-// === Global path === //
-// =================== //
-/** GET EVENTS page && INFO page **/
+/** GET EVENTS page && EVENT INFO page **/
 // === Get All Events from Server by Front Language === //
 EventsRouter.route("/view/:lang")
   // GET
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const eventsLang = req.params.lang;
-      // === Console LOG === //
-      // console.log("eventsLang ::", eventsLang);
-      // === Console LOG === //
+      const eventsLang = req.params.lang; // === Active Language
       try {
-        const eventsGat = await eventsGatAll(eventsLang);
-        // // === Console LOG === //
-        // console.log("eventsGat ::", eventsGat);
-        // // === Console LOG === //
-        return res.json(eventsGat);
-        // return res.json({ eventsGat: eventsGat, LangDB: eventsLang });
+        await eventsGatAll(eventsLang).then((eventsGat) => {
+          return res.json(eventsGat);
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -59,19 +50,12 @@ EventsRouter.route("/view/:lang/:ID")
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const params = req.params;
-      const eventLang = req.params.lang;
-      const eventID = req.params.ID;
-      // // === Console LOG === //
-      // console.log("eventLang ::", eventLang);
-      // console.log("eventID ::", eventID);
-      // // === Console LOG === //
+      const eventLang = req.params.lang; // === Active Language
+      const eventID = req.params.ID; // === Event ID
       try {
-        const eventsGat = await eventGat(eventLang, eventID);
-        // // === Console LOG === //
-        // console.log("eventsGat ::", eventsGat);
-        // // === Console LOG === //
-        return res.json(eventsGat);
+        await eventGat(eventLang, eventID).then((eventsGat) => {
+          return res.json(eventsGat);
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -79,24 +63,18 @@ EventsRouter.route("/view/:lang/:ID")
   );
 // === Get  Event By ID from Server by Front Language === //
 /** GET EVENTS page && INFO page **/
-/** GET & UPDATE UPDATE page **/
+/** ( GET & UPDATE ) UPDATE page **/
 EventsRouter.route("/Update/:ID")
   // GET
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       // const params = req.params;
-      const EventID = req.params.ID;
-      // // === Console LOG === //
-      // console.log("params ::", params);
-      // console.log("eventID ::", eventID);
-      // // === Console LOG === //
+      const EventID = req.params.ID; // === Event ID
       try {
-        const eventsGat = await eventGetUpdateID(EventID);
-        // // === Console LOG === //
-        // console.log("eventsGat ::", eventsGat);
-        // // === Console LOG === //
-        return res.json(eventsGat);
+        await eventGetUpdateID(EventID).then((eventsGat) => {
+          return res.json(eventsGat);
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -109,28 +87,23 @@ EventsRouter.route("/Update/:ID")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
+      const EventID = req.params.ID; // === Event ID
       const EventsFull: EventsFull = req.body;
-      const EventsID = EventsFull.EventsID;
+      // const EventsID = EventsFull.EventsID;
       const EventsActive = EventsFull.EventsActive;
       const EventsImageType = EventsFull.EventsImageType;
       const EventsInfoArray = EventsFull.EventsInfoArray;
       const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
-      // // === Console LOG === //
-      // console.log("req.body", req.body);
-      // console.log("IMG DB:", IMG)
-      // console.log("imgType", EventsImageType);
-      // console.log("active", EventsActive);
-      // console.log("infoArray", EventsInfoArray);
-      // // === Console LOG === //
       try {
-        const EventUpdate = await eventUpdateID(
-          EventsID,
+        await eventUpdateID(
+          EventID,
           IMG,
           EventsImageType,
           EventsActive,
           EventsInfoArray
-        );
-        return res.json(EventUpdate); // True/False
+        ).then((EventUpdate) => {
+          return res.json(EventUpdate); // True/False
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -142,15 +115,11 @@ EventsRouter.route("/Update/:ID")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      // const params = req.params;
-      const EventID = req.params.ID;
-      // // === Console LOG === //
-      // console.log("params ::", params);
-      // console.log("eventID ::", EventID);
-      // // === Console LOG === //
+      const EventID = req.params.ID; // === Event ID
       try {
-        const DeleteEvent = await eventDelete(EventID);
-        return res.json(DeleteEvent); // True/False
+        await eventDelete(EventID).then((DeleteEvent) => {
+          return res.json(DeleteEvent); // True/False
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -165,26 +134,20 @@ EventsRouter.route("/Update")
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
       const EventsFull: EventsFull = req.body;
-      const EventsID = EventsFull.EventsID;
+      // const EventsID = EventsFull.EventsID;
       const EventsActive = EventsFull.EventsActive;
       const EventsImageType = EventsFull.EventsImageType;
       const EventsInfoArray = EventsFull.EventsInfoArray;
       const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
-      // // === Console LOG === //
-      // console.log("req.body", req.body);
-      // console.log("IMG DB:", IMG)
-      // console.log("imgType", EventsImageType);
-      // console.log("active", EventsActive);
-      // console.log("infoArray", EventsInfoArray);
-      // // === Console LOG === //
       try {
-        const EventUpdate = await eventUpdate(
+        await eventNew(
           IMG,
           EventsImageType,
           EventsActive,
           EventsInfoArray
-        );
-        return res.json(EventUpdate); // True/False
+        ).then((EventNew) => {
+          return res.json(EventNew); // True/False
+        });
       } catch (e) {
         return res.json(e);
       }
@@ -196,17 +159,18 @@ EventsRouter.route("/Update")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      console.log("Delete All Events");
-      const EventID = req.params.ID;
+      const EventID = req.params.ID; // === Event ID
       try {
-        const DeleteEvent = await eventDelete(EventID);
-        return res.json(DeleteEvent); // True/False
+        await eventDelete(EventID).then((DeleteEvent) => {
+          return res.json(DeleteEvent); // True/False
+        });
       } catch (e) {
         return res.json(e);
       }
     }
   );
 /** GET & UPDATE UPDATE page **/
+/** Update Location of event in View All Events Page **/
 EventsRouter.route("/OrderList")
   // Update
   .put(
@@ -215,16 +179,15 @@ EventsRouter.route("/OrderList")
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
       const EventsFull: Events[] = req.body;
-      // // === Console LOG === //
-      // console.log("req.body", req.body);
-      // // === Console LOG === //
       try {
-        const EventOrderList = await eventOrderList(EventsFull);
-        return res.json(EventOrderList); // True/False
+        await eventOrderList(EventsFull).then((EventOrderList) => {
+          return res.json(EventOrderList); // True/False
+        });
       } catch (e) {
         return res.json(e);
       }
     }
   );
+/** Update Location of event in View All Events Page **/
 // === Export Event Router === //
 export { EventsRouter };

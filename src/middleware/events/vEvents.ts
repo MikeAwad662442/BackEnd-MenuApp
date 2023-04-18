@@ -1,3 +1,16 @@
+// =============== //
+// ==== Events === //
+// =============== //
+
+/**
+ * EVENTS && EVENTS Languages Tables
+ * GET / UPDATE / INSERT / DELETE
+ * ORDER LIST for Events
+ * Active Event || Not
+ * Note :: For Event,
+ *      the Name of Event must be included but Body isn't required
+ */
+
 import {
   Events,
   EventsFull,
@@ -11,7 +24,7 @@ import { DeleteIMG } from "../UploadFile/UpFiles";
 const eventsGatAll = async (lang: string) => {
   let newRes: any;
   try {
-    const getEvents = await V_Events.findAll({
+    await V_Events.findAll({
       include: {
         model: V_EventsLanguage,
         as: "info",
@@ -19,20 +32,21 @@ const eventsGatAll = async (lang: string) => {
         where: { lang: lang },
         required: true,
       },
-      order: [["listNum", "ASC"]],
+      order: [["listNum", "ASC"]], // return All EVENTS with Order that included in ListNum not Like the insert in table
+    }).then((getEvents: V_Events[]) => {
+      newRes = getEvents;
     });
-    newRes = getEvents;
   } catch (e) {
     newRes = e;
   }
-  return newRes; // === Send Events Data to Front
+  return newRes; // === Send Events Data to Front || errors
 };
 // === Get All Events List Info === //
 // === Get Event from DB by ID === //
 const eventGat = async (lang: string, id: string) => {
   let newRes: any;
   try {
-    const getEvents = await V_Events.findOne({
+    await V_Events.findOne({
       where: { id: id },
       include: {
         model: V_EventsLanguage,
@@ -41,20 +55,27 @@ const eventGat = async (lang: string, id: string) => {
         where: { lang: lang },
         required: true,
       },
+    }).then((getEvents) => {
+      newRes = getEvents;
     });
-    newRes = getEvents;
   } catch (e) {
     newRes = e;
   }
-  return newRes; // === Send Events Data to Front
+  return newRes; // === Send Events Data to Front || errors
 };
+// === Get Event from DB by ID === //
 /** GET EVENTS page && INFO page **/
 /** GET & UPDATE UPDATE page **/
-// === Get Event from DB by ID === //
+/**
+ * Return All Information about the Item
+ * event by ID from V_Events Table
+ * All Language that connect with event by ID
+ */
+// === Get Event from DB by ID for Update === //
 const eventGetUpdateID = async (id: string) => {
   let newRes: any;
   try {
-    const getEvents = await V_Events.findOne({
+    await V_Events.findOne({
       where: { id: id },
       include: {
         model: V_EventsLanguage,
@@ -62,14 +83,15 @@ const eventGetUpdateID = async (id: string) => {
         // attributes: ["lang", "name", "description"], // Get just this Column
         required: true,
       },
+    }).then((getEvents) => {
+      newRes = getEvents;
     });
-    newRes = getEvents;
   } catch (e) {
     newRes = e;
   }
-  return newRes; // === Send Events Data to Front
+  return newRes; // === Send Events Data to Front || errors
 };
-// === Get Event from DB by ID === //
+// === Get Event from DB by ID for Update === //
 // === Update Event from DB by ID === //
 const eventUpdateID = async (
   id: string,
@@ -79,12 +101,6 @@ const eventUpdateID = async (
   infoArray: any
 ) => {
   const EventsInfoArray: EventsLanguage[] = JSON.parse(infoArray);
-  // // === Console LOG === //
-  // console.log("IMG DB:", IMG);
-  // console.log("imgType", imgType);
-  // console.log("active", active);
-  // console.log("infoArray", EventsInfoArray);
-  // // === Console LOG === //
   let newRes: any;
   try {
     await V_Events.findOne({ where: { id: id } }).then(
@@ -102,7 +118,6 @@ const eventUpdateID = async (
         });
         // === Update DB === //
         updateEventID?.save().then((EventIDLang: V_Events) => {
-          // console.log("From Event Table to lang ::", EventIDLang);
           const EventID = EventIDLang.getDataValue("id");
           EventsInfoArray.forEach(async (data: EventsLanguage) => {
             try {
@@ -128,28 +143,19 @@ const eventUpdateID = async (
   } catch (e) {
     newRes = e;
   }
-  //   console.log("Event Update ::", newRes)
   return newRes; // === Send true || errors
 };
 // === Update Event from DB by ID === //
 // === Insert New Event  === //
-const eventUpdate = async (
+const eventNew = async (
   IMG: string,
   imgType: string,
   active: boolean,
   infoArray: any
 ) => {
   const EventsInfoArray: EventsLanguage[] = JSON.parse(infoArray);
-  // // === Console LOG === //
-  // console.log("IMG DB:", IMG);
-  // console.log("imgType", imgType);
-  // console.log("active", active);
-  // console.log("infoArray", EventsInfoArray);
-  // // === Console LOG === //
   let newRes: any;
-  // Get Number of Rows in the Table
-  let RowNum: number = await V_Events.count();
-  console.log(RowNum);
+  let RowNum: number = await V_Events.count(); // Get Number of Rows in the Table
   try {
     await V_Events.create({
       listNum: ++RowNum,
@@ -157,7 +163,6 @@ const eventUpdate = async (
       imgType: imgType,
       active: active,
     }).then((res: V_Events) => {
-      // console.log("V_Events ID ::", res.dataValues.id);
       if (res.dataValues.id !== undefined) {
         EventsInfoArray.forEach(async (data: EventsLanguage) => {
           try {
@@ -177,16 +182,16 @@ const eventUpdate = async (
   } catch (e) {
     newRes = e;
   }
-  //   console.log("Event Update ::", newRes)
   return newRes; // === Send true || errors
 };
 // === Insert New Event  === //
 /** GET & UPDATE UPDATE page **/
 /** Delete All & ByID **/
+
 const eventDelete = async (id: string) => {
-  // console.log("Delete ID ::", id);
   let newRes: any;
   if (id === undefined) {
+    // === Delete All Events === //
     try {
       await V_Events.findAll().then(
         async (DeleteEventID: V_Events[] | null) => {
@@ -213,7 +218,9 @@ const eventDelete = async (id: string) => {
     } catch (e) {
       newRes = e;
     }
+    // === Delete All Events === //
   } else {
+    // === Delete EVENT by ID === //
     try {
       await V_Events.findOne({
         where: { id: id },
@@ -236,12 +243,15 @@ const eventDelete = async (id: string) => {
     } catch (e) {
       newRes = e;
     }
+    // === Delete EVENT by ID === //
   }
-
-  //   console.log("Event Update ::", newRes)
   return newRes; // === Send true || errors
 };
 /** Delete All & ByID **/
+/** Order List of EVENTS **/
+/**
+ * Insert New Number in listNum column
+ */
 const eventOrderList = async (NewList: Events[]) => {
   let newRes: any;
   try {
@@ -258,12 +268,14 @@ const eventOrderList = async (NewList: Events[]) => {
   } catch (e) {
     newRes = e;
   }
+  return newRes; // === Send true || errors
 };
+
 // === Export Function === //
 export {
   eventsGatAll,
   eventGat,
-  eventUpdate,
+  eventNew,
   eventUpdateID,
   eventGetUpdateID,
   eventDelete,

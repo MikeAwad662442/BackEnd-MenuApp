@@ -1,7 +1,13 @@
-import { Facility } from "./../../models/cPanel/cFacilityM";
-// =================== //
-// === Social Media == //
-// =================== //
+// ==================== //
+// === Social Media === //
+// ==================== //
+
+/**
+ * SocialMedia Table
+ * add Social Media Icon && Links
+ * Frond Page have SocialMedia && Facility
+ */
+
 import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
 import { socialGet, socialUpdate } from "../../middleware/cPanel/cSocialMedia";
@@ -10,9 +16,6 @@ import { IMGup, fileDB } from "../../middleware/UploadFile/UpFiles";
 import { FacilityInfo } from "../../models/cPanel/cFacilityM";
 
 const SocialMediaRouter = express.Router();
-// =================== //
-// === Global path === //
-// =================== //
 SocialMediaRouter.route("/")
   // GET
   .get(

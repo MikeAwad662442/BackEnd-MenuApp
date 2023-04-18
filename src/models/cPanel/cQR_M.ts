@@ -2,6 +2,13 @@
 // === QR Server ===== //
 // =================== //
 
+/**
+ * QR Table
+ * Import Facility LOGO
+ * WIFI Info
+ * Update INFO && PRINT
+ */
+
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 export interface QR {
