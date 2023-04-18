@@ -1,9 +1,11 @@
 // =============== //
-// ==== Events === //
+// == Item Type == //
 // =============== //
 
 /**
- * EVENTS && EVENTS Languages Tables
+ * Item Type it`s Lv.1 of Menu
+ * It includes the first and main level of classification of lists
+ *
  * GET / UPDATE / INSERT / DELETE
  * ORDER LIST for Events
  * Active Event || Not
@@ -15,17 +17,17 @@ import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 
 // === Group Events & Language === //
-export interface EventsFull {
-  EventsID: any;
+export interface ItemTypesFull {
+  ItemTypesID: any;
   File: any;
   EventsImageType: string;
   EventsActive: any;
-  EventsInfoArray: [EventsLanguage];
+  EventsInfoArray: [ItemTypesLanguage];
 }
 // === Group Events & Language === //
 
 // === Events DB === //
-export interface Events {
+export interface ItemTypes {
   id: any;
   listNum: any;
   image: string;
@@ -33,8 +35,8 @@ export interface Events {
   active: boolean;
 }
 
-export class V_Events extends Model<Events> {}
-V_Events.init(
+export class V_ItemTypes extends Model<ItemTypes> {}
+V_ItemTypes.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -63,7 +65,7 @@ V_Events.init(
   },
   {
     sequelize: db,
-    tableName: "V_Events",
+    tableName: "V_ItemTypes",
     // I don't want timestamps!
     createdAt: false,
     updatedAt: false,
@@ -73,15 +75,15 @@ V_Events.init(
 // === Events DB === //
 
 // === EventsLanguage DB === //
-export interface EventsLanguage {
+export interface ItemTypesLanguage {
   id: any;
   EventID: any;
   lang: string;
   name: string;
   description: string;
 }
-export class V_EventsLanguage extends Model<EventsLanguage> {}
-V_EventsLanguage.init(
+export class V_ItemTypesLanguage extends Model<ItemTypesLanguage> {}
+V_ItemTypesLanguage.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -110,7 +112,7 @@ V_EventsLanguage.init(
   },
   {
     sequelize: db,
-    tableName: "V_EventsLanguage",
+    tableName: "V_ItemTypesLanguage",
     // I don't want timestamps!
     createdAt: false,
     updatedAt: false,
@@ -122,14 +124,14 @@ V_EventsLanguage.init(
 /**
  * Used to Get Info from Both Tables
  */
-V_Events.hasMany(V_EventsLanguage, {
+V_ItemTypes.hasMany(V_ItemTypesLanguage, {
   as: "info",
   foreignKey: "EventID",
   sourceKey: "id",
   onDelete: "RESTRICT",
   onUpdate: "RESTRICT",
 });
-V_EventsLanguage.belongsTo(V_Events, {
+V_ItemTypesLanguage.belongsTo(V_ItemTypes, {
   foreignKey: "EventID",
   targetKey: "id",
 });

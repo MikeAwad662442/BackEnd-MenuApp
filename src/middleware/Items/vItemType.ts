@@ -12,12 +12,3 @@
  * Note :: For Event,
  *      the Name of Event must be included but Body isn't required
  */
-
-import express, { Request, Response, NextFunction } from "express";
-import { corsWithOptions } from "../../config/cors";
-import { fileUp, fileDB } from "../../middleware/UploadFile/UpFiles";
-
-const ItemTypesRouter = express.Router();
-
-// === Export Event Router === //
-export { ItemTypesRouter };
