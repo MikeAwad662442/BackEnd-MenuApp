@@ -7,26 +7,26 @@
  * It includes the first and main level of classification of lists
  *
  * GET / UPDATE / INSERT / DELETE
- * ORDER LIST for Events
- * Active Event || Not
- * Note :: For Event,
- *      the Name of Event must be included but Body isn't required
+ * ORDER LIST for ItemTypes
+ * Active ItemTypes || Not
+ * Note :: For ItemType,
+ *      the Name of ItemType must be included but Body isn't required
  */
 
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
 
-// === Group Events & Language === //
+// === Group ItemTypes & Language === //
 export interface ItemTypesFull {
-  ItemTypesID: any;
+  ID: any;
   File: any;
-  EventsImageType: string;
-  EventsActive: any;
-  EventsInfoArray: [ItemTypesLanguage];
+  ImageType: string;
+  Active: any;
+  InfoArray: [ItemTypesLanguage];
 }
-// === Group Events & Language === //
+// === Group ItemTypes & Language === //
 
-// === Events DB === //
+// === ItemTypes DB === //
 export interface ItemTypes {
   id: any;
   listNum: any;
@@ -71,13 +71,13 @@ V_ItemTypes.init(
     updatedAt: false,
   }
 );
-// V_Events.sync({ alter: true })
-// === Events DB === //
+// V_ItemTypes.sync({ alter: true })
+// === ItemTypes DB === //
 
-// === EventsLanguage DB === //
+// === ItemTypesLanguage DB === //
 export interface ItemTypesLanguage {
   id: any;
-  EventID: any;
+  ItemTypeID: any;
   lang: string;
   name: string;
   description: string;
@@ -92,7 +92,7 @@ V_ItemTypesLanguage.init(
       unique: true,
       allowNull: false,
     },
-    EventID: {
+    ItemTypeID: {
       type: DataTypes.UUID,
       unique: false,
       allowNull: true,
@@ -118,20 +118,20 @@ V_ItemTypesLanguage.init(
     updatedAt: false,
   }
 );
-// V_EventsLanguage.sync({ alter: true })
+// V_ItemTypesLanguage.sync({ alter: true })
 
-// === EventsLanguage DB === //
+// === ItemTypesLanguage DB === //
 /**
  * Used to Get Info from Both Tables
  */
 V_ItemTypes.hasMany(V_ItemTypesLanguage, {
   as: "info",
-  foreignKey: "EventID",
+  foreignKey: "ItemTypeID",
   sourceKey: "id",
   onDelete: "RESTRICT",
   onUpdate: "RESTRICT",
 });
 V_ItemTypesLanguage.belongsTo(V_ItemTypes, {
-  foreignKey: "EventID",
+  foreignKey: "ItemTypeID",
   targetKey: "id",
 });

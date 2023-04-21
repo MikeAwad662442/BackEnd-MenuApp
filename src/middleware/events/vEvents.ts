@@ -65,7 +65,7 @@ const eventGat = async (lang: string, id: string) => {
 };
 // === Get Event from DB by ID === //
 /** GET EVENTS page && INFO page **/
-/** GET & UPDATE UPDATE page **/
+/** ( GET & UPDATE ) UPDATE page **/
 /**
  * Return All Information about the Item
  * event by ID from V_Events Table
@@ -185,9 +185,8 @@ const eventNew = async (
   return newRes; // === Send true || errors
 };
 // === Insert New Event  === //
-/** GET & UPDATE UPDATE page **/
+/** ( GET & UPDATE ) UPDATE page **/
 /** Delete All & ByID **/
-
 const eventDelete = async (id: string) => {
   let newRes: any;
   if (id === undefined) {
@@ -270,7 +269,7 @@ const eventOrderList = async (NewList: Events[]) => {
   }
   return newRes; // === Send true || errors
 };
-
+/** Order List of EVENTS **/
 // === Export Function === //
 export {
   eventsGatAll,
