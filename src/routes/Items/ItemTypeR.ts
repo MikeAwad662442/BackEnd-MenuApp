@@ -4,13 +4,13 @@
 
 /**
  * Item Type it`s Lv.1 of Menu
- * It includes the first and main level of classification of lists
+ * It`s includes the first and main level of classification of lists
  *
  * GET / UPDATE / INSERT / DELETE
- * ORDER LIST for Events
- * Active Event || Not
- * Note :: For Event,
- *      the Name of Event must be included but Body isn't required
+ * ORDER LIST for Item Type
+ * Active Item Type || Not
+ * Note :: For Item Type,
+ *      the Name of Item Type must be included but Body isn't required
  */
 
 import express, { Request, Response, NextFunction } from "express";
@@ -23,7 +23,7 @@ import {
   ItemTypesGat,
   ItemTypesGatAll,
   ItemTypesOrderList,
-  eventUpdateID,
+  ItemTypesUpdateID,
 } from "../../middleware/Items/vItemType";
 import { ItemTypes, ItemTypesFull } from "../../models/Items/ItemTypeM";
 
@@ -36,10 +36,10 @@ ItemTypesRouter.route("/view/:lang")
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const ItemTypesLang = req.params.lang; // === Active Language
+      const Lang = req.params.lang; // === Active Language
       try {
-        await ItemTypesGatAll(ItemTypesLang).then((ItemTypesGat) => {
-          return res.json(ItemTypesGat);
+        await ItemTypesGatAll(Lang).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend);
         });
       } catch (e) {
         return res.json(e);
@@ -47,24 +47,24 @@ ItemTypesRouter.route("/view/:lang")
     }
   );
 // === Get All ItemTypes from Server by Front Language === //
-// === Get  Event By ID from Server by Front Language === //
+// === Get  ItemType By ID from Server by Front Language === //
 ItemTypesRouter.route("/view/:lang/:ID")
   // GET
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const eventLang = req.params.lang; // === Active Language
-      const eventID = req.params.ID; // === Event ID
+      const Lang = req.params.lang; // === Active Language
+      const ID = req.params.ID; // === ItemTypeID
       try {
-        await ItemTypesGat(eventLang, eventID).then((eventsGat) => {
-          return res.json(eventsGat);
+        await ItemTypesGat(Lang, ID).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend);
         });
       } catch (e) {
         return res.json(e);
       }
     }
   );
-// === Get  Event By ID from Server by Front Language === //
+// === Get  ItemTypes By ID from Server by Front Language === //
 /** GET ItemTypes && ItemTypes INFO page **/
 /** GET ItemTypes page && INFO page **/
 /** ( GET & UPDATE ) UPDATE page **/
@@ -74,10 +74,10 @@ ItemTypesRouter.route("/Update/:ID")
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       // const params = req.params;
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === Event ID
       try {
-        await ItemTypeGetUpdateID(EventID).then((eventsGat) => {
-          return res.json(eventsGat);
+        await ItemTypeGetUpdateID(ID).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend);
         });
       } catch (e) {
         return res.json(e);
@@ -91,23 +91,18 @@ ItemTypesRouter.route("/Update/:ID")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
-      const EventsFull: ItemTypesFull = req.body;
-      // const EventsID = EventsFull.EventsID;
-      const EventsActive = EventsFull.Active;
-      const EventsImageType = EventsFull.ImageType;
-      const EventsInfoArray = EventsFull.InfoArray;
-      const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
+      const ID = req.params.ID; // === ItemTypeID
+      const Full: ItemTypesFull = req.body;
+      const Active = Full.Active;
+      const ImageType = Full.ImageType;
+      const InfoArray = Full.InfoArray;
+      const IMG = await fileDB(req.file?.path, req.body.File, ImageType); // Files Ro Images To DB
       try {
-        await eventUpdateID(
-          EventID,
-          IMG,
-          EventsImageType,
-          EventsActive,
-          EventsInfoArray
-        ).then((EventUpdate) => {
-          return res.json(EventUpdate); // True/False
-        });
+        await ItemTypesUpdateID(ID, IMG, ImageType, Active, InfoArray).then(
+          (ItemTypeSend) => {
+            return res.json(ItemTypeSend); // True/False
+          }
+        );
       } catch (e) {
         return res.json(e);
       }
@@ -119,10 +114,10 @@ ItemTypesRouter.route("/Update/:ID")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === ItemTypeID
       try {
-        await ItemTypeDelete(EventID).then((DeleteEvent) => {
-          return res.json(DeleteEvent); // True/False
+        await ItemTypeDelete(ID).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend); // True/False
         });
       } catch (e) {
         return res.json(e);
@@ -137,22 +132,18 @@ ItemTypesRouter.route("/Update")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventsFull: ItemTypesFull = req.body;
-      // const EventsID = EventsFull.EventsID;
-      const EventsActive = EventsFull.Active;
-      const EventsImageType = EventsFull.ImageType;
-      const EventsInfoArray = EventsFull.InfoArray;
-      const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
-      console.log("EventsFull ::", EventsFull, "EventsActive ::", EventsActive);
+      const Full: ItemTypesFull = req.body;
+      const Active = Full.Active;
+      const ImageType = Full.ImageType;
+      const InfoArray = Full.InfoArray;
+      const IMG = await fileDB(req.file?.path, req.body.File, ImageType); // Files Ro Images To DB
+      // console.log("Full ::", Full, "Active ::", Active);
       try {
-        await ItemTypeNew(
-          IMG,
-          EventsImageType,
-          EventsActive,
-          EventsInfoArray
-        ).then((EventNew) => {
-          return res.json(EventNew); // True/False
-        });
+        await ItemTypeNew(IMG, ImageType, Active, InfoArray).then(
+          (ItemTypeSend) => {
+            return res.json(ItemTypeSend); // True/False
+          }
+        );
       } catch (e) {
         return res.json(e);
       }
@@ -164,10 +155,10 @@ ItemTypesRouter.route("/Update")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === ItemTypeID
       try {
-        await ItemTypeDelete(EventID).then((DeleteEvent) => {
-          return res.json(DeleteEvent); // True/False
+        await ItemTypeDelete(ID).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend); // True/False
         });
       } catch (e) {
         return res.json(e);
@@ -175,7 +166,7 @@ ItemTypesRouter.route("/Update")
     }
   );
 /** GET & UPDATE UPDATE page **/
-/** Update Location of event in View All Events Page **/
+/** Update Location of ItemType in View All ItemType Page **/
 ItemTypesRouter.route("/OrderList")
   // Update
   .put(
@@ -183,10 +174,10 @@ ItemTypesRouter.route("/OrderList")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventsFull: ItemTypes[] = req.body;
+      const Full: ItemTypes[] = req.body;
       try {
-        await ItemTypesOrderList(EventsFull).then((EventOrderList) => {
-          return res.json(EventOrderList); // True/False
+        await ItemTypesOrderList(Full).then((ItemTypeSend) => {
+          return res.json(ItemTypeSend); // True/False
         });
       } catch (e) {
         return res.json(e);

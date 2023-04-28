@@ -207,13 +207,13 @@ const eventDelete = async (id: string) => {
                 where: { EventID: EventID },
               });
               await V_Events.destroy({ where: { id: EventID } });
-              newRes = true;
             } catch (e) {
               newRes = e;
             }
           });
         }
       );
+      newRes = true;
     } catch (e) {
       newRes = e;
     }
@@ -234,11 +234,11 @@ const eventDelete = async (id: string) => {
           }
           await V_EventsLanguage.destroy({ where: { EventID: EventID } });
           await V_Events.destroy({ where: { id: EventID } });
-          newRes = true;
         } catch (e) {
           newRes = e;
         }
       });
+      newRes = true;
     } catch (e) {
       newRes = e;
     }

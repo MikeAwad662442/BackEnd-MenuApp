@@ -1,50 +1,46 @@
 // =============== //
-// == Item Type == //
+// ==== Item ===== //
 // =============== //
 
 /**
- * Item Type it`s Lv.1 of Menu
- * It includes the first and main level of classification of lists
+ * Items it`s Lv.2 of Menu
+ * It`s includes the first and main level of classification of lists
  *
  * GET / UPDATE / INSERT / DELETE
- * ORDER LIST for ItemTypes
- * Active ItemTypes || Not
- * Note :: For ItemType,
- *      the Name of ItemType must be included but Body isn't required
+ * ORDER LIST for Items
+ * Active Items || Not
+ * Note :: For Items,
+ *      the Name & Body of Items must be included
  */
 
 import { DataTypes, Model } from "sequelize";
 import db from "../../config/db";
+import { V_ItemTypes } from "./ItemTypeM";
 
 // === Group ItemTypes & Language === //
-export interface ItemTypesFull {
+export interface ItemsFull {
   ID: any;
+  ItemTypeID: any;
   File: any;
   ImageType: string;
   Active: any;
-  InfoArray: [ItemTypesLanguage];
-}
-// === Group ItemTypes & Language === //
-// === Group ItemTypes & Language === //
-export interface ItemTypesINFO {
-  ID: any;
-  File: any;
-  ImageType: string;
-  Active: any;
-  InfoArray: ItemTypesLanguage;
+  Price: number;
+  InfoArray: [ItemsLanguage];
 }
 // === Group ItemTypes & Language === //
 // === ItemTypes DB === //
-export interface ItemTypes {
+export interface Items {
   id: any;
+  ItemTypeID: any;
   listNum: any;
   image: string;
   imgType: string;
   active: boolean;
+  price: number;
 }
 
-export class V_ItemTypes extends Model<ItemTypes> {}
-V_ItemTypes.init(
+export class V_Items extends Model<Items> {}
+V_Items.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -52,6 +48,11 @@ V_ItemTypes.init(
       primaryKey: true,
       unique: true,
       allowNull: false,
+    },
+    ItemTypeID: {
+      type: DataTypes.UUID,
+      unique: false,
+      allowNull: true,
     },
     listNum: {
       type: DataTypes.INTEGER,
@@ -70,28 +71,33 @@ V_ItemTypes.init(
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    price: {
+      type: DataTypes.DECIMAL(6, 2),
+      unique: false,
+      allowNull: false,
+    },
   },
   {
     sequelize: db,
-    tableName: "V_ItemTypes",
+    tableName: "V_Items",
     // I don't want timestamps!
     createdAt: false,
     updatedAt: false,
   }
 );
-// V_ItemTypes.sync({ alter: true })
+// V_Items.sync({ alter: true })
 // === ItemTypes DB === //
 
 // === ItemTypesLanguage DB === //
-export interface ItemTypesLanguage {
+export interface ItemsLanguage {
   id: any;
-  ItemTypeID: any;
+  ItemsID: any;
   lang: string;
   name: string;
   description: string;
 }
-export class V_ItemTypesLanguage extends Model<ItemTypesLanguage> {}
-V_ItemTypesLanguage.init(
+export class V_ItemsLanguage extends Model<ItemsLanguage> {}
+V_ItemsLanguage.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -100,7 +106,7 @@ V_ItemTypesLanguage.init(
       unique: true,
       allowNull: false,
     },
-    ItemTypeID: {
+    ItemsID: {
       type: DataTypes.UUID,
       unique: false,
       allowNull: true,
@@ -120,7 +126,7 @@ V_ItemTypesLanguage.init(
   },
   {
     sequelize: db,
-    tableName: "V_ItemTypesLanguage",
+    tableName: "V_ItemsLanguage",
     // I don't want timestamps!
     createdAt: false,
     updatedAt: false,
@@ -132,14 +138,18 @@ V_ItemTypesLanguage.init(
 /**
  * Used to Get Info from Both Tables
  */
-V_ItemTypes.hasMany(V_ItemTypesLanguage, {
+V_Items.hasMany(V_ItemsLanguage, {
   as: "info",
-  foreignKey: "ItemTypeID",
+  foreignKey: "ItemsID",
   sourceKey: "id",
   onDelete: "RESTRICT",
   onUpdate: "RESTRICT",
 });
-V_ItemTypesLanguage.belongsTo(V_ItemTypes, {
+V_ItemsLanguage.belongsTo(V_Items, {
+  foreignKey: "ItemsID",
+  targetKey: "id",
+});
+V_Items.belongsTo(V_ItemTypes, {
   foreignKey: "ItemTypeID",
   targetKey: "id",
 });

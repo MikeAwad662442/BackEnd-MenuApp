@@ -83,8 +83,8 @@ const ItemTypeGetUpdateID = async (id: string) => {
         // attributes: ["lang", "name", "description"], // Get just this Column
         required: true,
       },
-    }).then((getEvents) => {
-      newRes = getEvents;
+    }).then((getItemTypes) => {
+      newRes = getItemTypes;
     });
   } catch (e) {
     newRes = e;
@@ -92,34 +92,34 @@ const ItemTypeGetUpdateID = async (id: string) => {
   return newRes; // === Send ItemType Data to Front || errors
 };
 // === Get ItemType from DB by ID for Update === //
-// === Update Event from DB by ID === //
-const eventUpdateID = async (
+// === Update ItemType from DB by ID === //
+const ItemTypesUpdateID = async (
   id: string,
   IMG: string,
   imgType: string,
   active: boolean,
   infoArray: any
 ) => {
-  const EventsInfoArray: ItemTypesLanguage[] = JSON.parse(infoArray);
+  const ItemTypesInfoArray: ItemTypesLanguage[] = JSON.parse(infoArray);
   let newRes: any;
   try {
     await V_ItemTypes.findOne({ where: { id: id } }).then(
-      (updateEventID: V_ItemTypes | null) => {
+      (updateItemTypesID: V_ItemTypes | null) => {
         // === check if FILE is same || new FILE is set
-        if (updateEventID?.getDataValue("image") !== IMG) {
-          const deleteFile: any = updateEventID?.getDataValue("image");
+        if (updateItemTypesID?.getDataValue("image") !== IMG) {
+          const deleteFile: any = updateItemTypesID?.getDataValue("image");
           DeleteIMG(deleteFile); // === delete Old Image === //
         }
         // === Update DB === //
-        updateEventID?.set({
+        updateItemTypesID?.set({
           image: IMG,
           imgType: imgType,
           active: active,
         });
         // === Update DB === //
-        updateEventID?.save().then((EventIDLang: V_ItemTypes) => {
-          const ItemTypeID = EventIDLang.getDataValue("id");
-          EventsInfoArray.forEach(async (data: ItemTypesLanguage) => {
+        updateItemTypesID?.save().then((ItemTypesIDLang: V_ItemTypes) => {
+          const ItemTypeID = ItemTypesIDLang.getDataValue("id");
+          ItemTypesInfoArray.forEach(async (data: ItemTypesLanguage) => {
             try {
               await V_ItemTypesLanguage.findOne({
                 where: { id: data.id, ItemTypeID: ItemTypeID },
@@ -145,7 +145,7 @@ const eventUpdateID = async (
   }
   return newRes; // === Send true || errors
 };
-// === Update Event from DB by ID === //
+// === Update ItemTypes from DB by ID === //
 // === Insert New ItemType  === //
 const ItemTypeNew = async (
   IMG: string,
@@ -190,13 +190,13 @@ const ItemTypeNew = async (
 const ItemTypeDelete = async (id: string) => {
   let newRes: any;
   if (id === undefined) {
-    // === Delete All Events === //
+    // === Delete All ItemTypes === //
     try {
       await V_ItemTypes.findAll().then(
-        async (DeleteEventID: V_ItemTypes[] | null) => {
-          DeleteEventID?.forEach(async (data: V_ItemTypes) => {
-            // console.log("image ::", DeleteEventID);
-            const EventID = data?.getDataValue("id");
+        async (DeleteItemTypesID: V_ItemTypes[] | null) => {
+          DeleteItemTypesID?.forEach(async (data: V_ItemTypes) => {
+            // console.log("image ::", DeleteItemTypesID);
+            const ID = data?.getDataValue("id");
             try {
               // === check if FILE is same || new FILE is set
               if (data?.getDataValue("image") !== null) {
@@ -204,50 +204,50 @@ const ItemTypeDelete = async (id: string) => {
                 DeleteIMG(deleteFile); // === delete Old Image === //
               }
               await V_ItemTypesLanguage.destroy({
-                where: { ItemTypeID: EventID },
+                where: { ItemTypeID: ID },
               });
-              await V_ItemTypes.destroy({ where: { id: EventID } });
-              newRes = true;
+              await V_ItemTypes.destroy({ where: { id: ID } });
             } catch (e) {
               newRes = e;
             }
           });
         }
       );
+      newRes = true;
     } catch (e) {
       newRes = e;
     }
-    // === Delete All Events === //
+    // === Delete All ItemTypes === //
   } else {
-    // === Delete EVENT by ID === //
+    // === Delete ItemTypes by ID === //
     try {
       await V_ItemTypes.findOne({
         where: { id: id },
-      }).then(async (DeleteEventID: V_ItemTypes | null) => {
-        // console.log("image ::", DeleteEventID);
-        const EventID = DeleteEventID?.getDataValue("id");
+      }).then(async (DeleteItemTypesID: V_ItemTypes | null) => {
+        // console.log("image ::", DeleteItemTypesID);
+        const ID = DeleteItemTypesID?.getDataValue("id");
         try {
           // === check if FILE is same || new FILE is set
-          if (DeleteEventID?.getDataValue("image") !== null) {
-            const deleteFile: any = DeleteEventID?.getDataValue("image");
+          if (DeleteItemTypesID?.getDataValue("image") !== null) {
+            const deleteFile: any = DeleteItemTypesID?.getDataValue("image");
             DeleteIMG(deleteFile); // === delete Old Image === //
           }
-          await V_ItemTypesLanguage.destroy({ where: { ItemTypeID: EventID } });
-          await V_ItemTypes.destroy({ where: { id: EventID } });
-          newRes = true;
+          await V_ItemTypesLanguage.destroy({ where: { ItemTypeID: ID } });
+          await V_ItemTypes.destroy({ where: { id: ID } });
         } catch (e) {
           newRes = e;
         }
       });
+      newRes = true;
     } catch (e) {
       newRes = e;
     }
-    // === Delete EVENT by ID === //
+    // === Delete ItemTypes by ID === //
   }
   return newRes; // === Send true || errors
 };
 /** Delete All & ByID **/
-/** Order List of EVENTS **/
+/** Order List of ItemTypes **/
 /**
  * Insert New Number in listNum column
  */
@@ -269,14 +269,14 @@ const ItemTypesOrderList = async (NewList: ItemTypes[]) => {
   }
   return newRes; // === Send true || errors
 };
-/** Order List of EVENTS **/
+/** Order List of ItemTypes **/
 // === Export Function === //
 export {
   ItemTypesGatAll,
   ItemTypesGat,
   ItemTypeNew,
   ItemTypeGetUpdateID,
-  eventUpdateID,
+  ItemTypesUpdateID,
   ItemTypeDelete,
   ItemTypesOrderList,
 };

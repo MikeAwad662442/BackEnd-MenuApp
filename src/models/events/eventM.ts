@@ -16,11 +16,11 @@ import db from "../../config/db";
 
 // === Group Events & Language === //
 export interface EventsFull {
-  EventsID: any;
+  ID: any;
   File: any;
-  EventsImageType: string;
-  EventsActive: any;
-  EventsInfoArray: [EventsLanguage];
+  ImageType: string;
+  Active: any;
+  InfoArray: [EventsLanguage];
 }
 // === Group Events & Language === //
 

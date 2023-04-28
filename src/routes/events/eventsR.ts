@@ -33,10 +33,10 @@ EventsRouter.route("/view/:lang")
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const eventsLang = req.params.lang; // === Active Language
+      const Lang = req.params.lang; // === Active Language
       try {
-        await eventsGatAll(eventsLang).then((eventsGat) => {
-          return res.json(eventsGat);
+        await eventsGatAll(Lang).then((EventSend) => {
+          return res.json(EventSend);
         });
       } catch (e) {
         return res.json(e);
@@ -50,11 +50,11 @@ EventsRouter.route("/view/:lang/:ID")
   .get(
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
-      const eventLang = req.params.lang; // === Active Language
-      const eventID = req.params.ID; // === Event ID
+      const Lang = req.params.lang; // === Active Language
+      const ID = req.params.ID; // === Event ID
       try {
-        await eventGat(eventLang, eventID).then((eventsGat) => {
-          return res.json(eventsGat);
+        await eventGat(Lang, ID).then((EventSend) => {
+          return res.json(EventSend);
         });
       } catch (e) {
         return res.json(e);
@@ -70,10 +70,10 @@ EventsRouter.route("/Update/:ID")
     corsWithOptions,
     async (req: Request, res: Response, next: NextFunction) => {
       // const params = req.params;
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === Event ID
       try {
-        await eventGetUpdateID(EventID).then((eventsGat) => {
-          return res.json(eventsGat);
+        await eventGetUpdateID(ID).then((EventSend) => {
+          return res.json(EventSend);
         });
       } catch (e) {
         return res.json(e);
@@ -87,23 +87,18 @@ EventsRouter.route("/Update/:ID")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
-      const EventsFull: EventsFull = req.body;
-      // const EventsID = EventsFull.EventsID;
-      const EventsActive = EventsFull.EventsActive;
-      const EventsImageType = EventsFull.EventsImageType;
-      const EventsInfoArray = EventsFull.EventsInfoArray;
-      const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
+      const ID = req.params.ID; // === Event ID
+      const Full: EventsFull = req.body;
+      const Active = Full.Active;
+      const ImageType = Full.ImageType;
+      const InfoArray = Full.InfoArray;
+      const IMG = await fileDB(req.file?.path, req.body.File, ImageType); // Files Ro Images To DB
       try {
-        await eventUpdateID(
-          EventID,
-          IMG,
-          EventsImageType,
-          EventsActive,
-          EventsInfoArray
-        ).then((EventUpdate) => {
-          return res.json(EventUpdate); // True/False
-        });
+        await eventUpdateID(ID, IMG, ImageType, Active, InfoArray).then(
+          (EventSend) => {
+            return res.json(EventSend); // True/False
+          }
+        );
       } catch (e) {
         return res.json(e);
       }
@@ -115,10 +110,10 @@ EventsRouter.route("/Update/:ID")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === Event ID
       try {
-        await eventDelete(EventID).then((DeleteEvent) => {
-          return res.json(DeleteEvent); // True/False
+        await eventDelete(ID).then((EventSend) => {
+          return res.json(EventSend); // True/False
         });
       } catch (e) {
         return res.json(e);
@@ -133,20 +128,14 @@ EventsRouter.route("/Update")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventsFull: EventsFull = req.body;
-      // const EventsID = EventsFull.EventsID;
-      const EventsActive = EventsFull.EventsActive;
-      const EventsImageType = EventsFull.EventsImageType;
-      const EventsInfoArray = EventsFull.EventsInfoArray;
-      const IMG = await fileDB(req.file?.path, req.body.File, EventsImageType); // Files Ro Images To DB
+      const Full: EventsFull = req.body;
+      const Active = Full.Active;
+      const ImageType = Full.ImageType;
+      const InfoArray = Full.InfoArray;
+      const IMG = await fileDB(req.file?.path, req.body.File, ImageType); // Files Ro Images To DB
       try {
-        await eventNew(
-          IMG,
-          EventsImageType,
-          EventsActive,
-          EventsInfoArray
-        ).then((EventNew) => {
-          return res.json(EventNew); // True/False
+        await eventNew(IMG, ImageType, Active, InfoArray).then((EventSend) => {
+          return res.json(EventSend); // True/False
         });
       } catch (e) {
         return res.json(e);
@@ -159,10 +148,10 @@ EventsRouter.route("/Update")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventID = req.params.ID; // === Event ID
+      const ID = req.params.ID; // === Event ID
       try {
-        await eventDelete(EventID).then((DeleteEvent) => {
-          return res.json(DeleteEvent); // True/False
+        await eventDelete(ID).then((EventSend) => {
+          return res.json(EventSend); // True/False
         });
       } catch (e) {
         return res.json(e);
@@ -178,10 +167,10 @@ EventsRouter.route("/OrderList")
     // TokenCheck,
     // ifAdmin,
     async (req: Request, res: Response, next: NextFunction) => {
-      const EventsFull: Events[] = req.body;
+      const Full: Events[] = req.body;
       try {
-        await eventOrderList(EventsFull).then((EventOrderList) => {
-          return res.json(EventOrderList); // True/False
+        await eventOrderList(Full).then((EventSend) => {
+          return res.json(EventSend); // True/False
         });
       } catch (e) {
         return res.json(e);

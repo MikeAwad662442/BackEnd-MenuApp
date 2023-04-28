@@ -15,9 +15,12 @@ exp
   // === to read the www file it must to add to same path of server.ts === //
   .use(express.static("public")); // === Red Files === //
 // === Routes === //
-// EventsRouter
-import { ItemTypesRouter } from "../routes/Item/ItemTypeR";
+// ItemTypesRouter
+import { ItemTypesRouter } from "../routes/Items/ItemTypeR";
 exp.use("/ItemTypes", ItemTypesRouter);
+// ItemsRouter
+import { ItemsRouter } from "../routes/Items/ItemsR";
+exp.use("/Items", ItemsRouter);
 // EventsRouter
 import { EventsRouter } from "../routes/Events/eventsR";
 exp.use("/events", EventsRouter);
