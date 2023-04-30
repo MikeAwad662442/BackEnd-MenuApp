@@ -128,11 +128,16 @@ EventsRouter.route("/Update")
     // ifAdmin,
     fileUp.single("File"),
     async (req: Request, res: Response, next: NextFunction) => {
+      console.log('fileUp.single("File")', fileUp.single("File"));
       const Full: EventsFull = req.body;
       const Active = Full.Active;
       const ImageType = Full.ImageType;
       const InfoArray = Full.InfoArray;
+
+      console.log("EventsFull ::", Full);
+
       const IMG = await fileDB(req.file?.path, req.body.File, ImageType); // Files Ro Images To DB
+
       try {
         await eventNew(IMG, ImageType, Active, InfoArray).then((EventSend) => {
           return res.json(EventSend); // True/False

@@ -61,6 +61,7 @@ const ItemTypesGat = async (lang: string, id: string) => {
   } catch (e) {
     newRes = e;
   }
+  // console.log("newRes ::", newRes);
   return newRes; // === Send ItemTypes Data to Front || errors
 };
 // === Get ItemTypes from DB by ID === //

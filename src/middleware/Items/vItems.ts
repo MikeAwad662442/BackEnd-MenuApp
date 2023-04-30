@@ -3,6 +3,7 @@
 // =============== //
 
 import {
+  Items,
   ItemsLanguage,
   V_Items,
   V_ItemsLanguage,
@@ -27,20 +28,20 @@ import { DeleteIMG } from "../UploadFile/UpFiles";
 const ItemsGatAll = async (lang: string, ID: string) => {
   let newRes: any;
   try {
-    await V_Items.findAll({
+    await V_Items.findOne({
       where: { id: ID },
       include: {
         model: V_ItemsLanguage,
         as: "info",
-        attributes: ["lang", "name"], // Get just this Column
+        attributes: ["lang", "name", "description"], // Get just this Column
         // where: { lang: lang, ItemsID: ID },
         where: { lang: lang },
         required: true,
       },
       order: [["listNum", "ASC"]], // return All ItemTypes with Order that included in ListNum not Like the insert in table
-    }).then(async (getItems: V_Items[]) => {
+    }).then(async (getItems: V_Items | null) => {
       console.log(getItems);
-      if (getItems.length > 0) {
+      if (getItems !== null) {
         newRes = getItems;
       } else {
         try {
@@ -49,7 +50,7 @@ const ItemsGatAll = async (lang: string, ID: string) => {
             include: {
               model: V_ItemsLanguage,
               as: "info",
-              attributes: ["lang", "name"], // Get just this Column
+              attributes: ["lang", "name", "description"], // Get just this Column
               where: { lang: lang },
               required: true,
             },
@@ -66,11 +67,13 @@ const ItemsGatAll = async (lang: string, ID: string) => {
   } catch (e) {
     newRes = e;
   }
+  console.log("newRes ::", newRes);
   return newRes; // === Send ItemTypes Data to Front || errors
 };
 // === Get All ItemTypes List Info === //
 // === Get Item from DB by ID for Update === //
 const ItemGetUpdateID = async (id: string) => {
+  console.log(id);
   let newRes: any;
   try {
     await V_Items.findOne({
@@ -87,6 +90,7 @@ const ItemGetUpdateID = async (id: string) => {
   } catch (e) {
     newRes = e;
   }
+  console.log("newRes ::", newRes);
   return newRes; // === Send Events Data to Front || errors
 };
 // === Get Item from DB by ID for Update === //
@@ -191,6 +195,97 @@ const ItemNew = async (
   return newRes; // === Send true || errors
 };
 // === Insert New ItemType  === //
+/** Delete All & ByID **/
+const ItemDeleteID = async (id: string) => {
+  let newRes: any;
+  // if (id === undefined) {
+  //   // === Delete All Items === //
+  //   try {
+  //     await V_Items.findAll().then(
+  //       async (DeleteItemTypesID: V_Items[] | null) => {
+  //         DeleteItemTypesID?.forEach(async (data: V_Items) => {
+  //           // console.log("image ::", DeleteItemTypesID);
+  //           const ID = data?.getDataValue("id");
+  //           try {
+  //             // === check if FILE is same || new FILE is set
+  //             if (data?.getDataValue("image") !== null) {
+  //               const deleteFile: any = data?.getDataValue("image");
+  //               DeleteIMG(deleteFile); // === delete Old Image === //
+  //             }
+  //             await V_ItemsLanguage.destroy({
+  //               where: { ItemsID: ID },
+  //             });
+  //             await V_Items.destroy({ where: { id: ID } });
+  //           } catch (e) {
+  //             newRes = e;
+  //           }
+  //         });
+  //       }
+  //     );
+  //     newRes = true;
+  //   } catch (e) {
+  //     newRes = e;
+  //   }
+  //   // === Delete All ItemTypes === //
+  // } else {
+  // === Delete ItemTypes by ID === //
+  try {
+    await V_Items.findOne({
+      where: { id: id },
+    }).then(async (DeleteItemTypesID: V_Items | null) => {
+      // console.log("image ::", DeleteItemTypesID);
+      const ID = DeleteItemTypesID?.getDataValue("id");
+      try {
+        // === check if FILE is same || new FILE is set
+        if (DeleteItemTypesID?.getDataValue("image") !== null) {
+          const deleteFile: any = DeleteItemTypesID?.getDataValue("image");
+          DeleteIMG(deleteFile); // === delete Old Image === //
+        }
+        await V_ItemsLanguage.destroy({ where: { ItemsID: ID } });
+        await V_ItemsLanguage.destroy({ where: { id: ID } });
+      } catch (e) {
+        newRes = e;
+      }
+    });
+    newRes = true;
+  } catch (e) {
+    newRes = e;
+  }
+  // === Delete ItemTypes by ID === //
+  // }
+  return newRes; // === Send true || errors
+};
+/** Delete All & ByID **/
+/** Order List of ItemTypes **/
+/**
+ * Insert New Number in listNum column
+ */
+const ItemsOrderList = async (NewList: Items[]) => {
+  let newRes: any;
+  try {
+    NewList.forEach(async (UpdateList: Items) => {
+      // === Console LOG === //
+      console.log("UpdateList ::", UpdateList.id);
+      // === Console LOG === //
+      await V_Items.update(
+        { listNum: UpdateList.listNum },
+        { where: { id: UpdateList.id } }
+      );
+    });
+    newRes = true;
+  } catch (e) {
+    newRes = e;
+  }
+  return newRes; // === Send true || errors
+};
+/** Order List of ItemTypes **/
 // === Export Function === //
-export { ItemsGatAll, ItemGetUpdateID, ItemUpdateID, ItemNew };
+export {
+  ItemsGatAll,
+  ItemGetUpdateID,
+  ItemUpdateID,
+  ItemNew,
+  ItemsOrderList,
+  ItemDeleteID,
+};
 // === Export Function === //

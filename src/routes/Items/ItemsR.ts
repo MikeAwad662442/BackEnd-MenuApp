@@ -17,12 +17,14 @@ import express, { Request, Response, NextFunction } from "express";
 import { corsWithOptions } from "../../config/cors";
 import { fileUp, fileDB } from "../../middleware/UploadFile/UpFiles";
 import {
+  ItemDeleteID,
   ItemGetUpdateID,
   ItemNew,
   ItemUpdateID,
   ItemsGatAll,
+  ItemsOrderList,
 } from "../../middleware/Items/vItems";
-import { ItemsFull } from "../../models/Items/ItemsM";
+import { Items, ItemsFull } from "../../models/Items/ItemsM";
 
 const ItemsRouter = express.Router();
 /** GET Items && Items INFO page **/
@@ -92,6 +94,22 @@ ItemsRouter.route("/Update/:ID")
         return res.json(e);
       }
     }
+  )
+  // Delete
+  .delete(
+    corsWithOptions,
+    // TokenCheck,
+    // ifAdmin,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const ID = req.params.ID; // === ItemTypeID
+      try {
+        await ItemDeleteID(ID).then((ItemSend) => {
+          return res.json(ItemSend); // True/False
+        });
+      } catch (e) {
+        return res.json(e);
+      }
+    }
   );
 ItemsRouter.route("/Update/")
   // Update
@@ -126,5 +144,25 @@ ItemsRouter.route("/Update/")
       }
     }
   );
+/** Update Location of ItemType in View All ItemType Page **/
+ItemsRouter.route("/OrderList")
+  // Update
+  .put(
+    corsWithOptions,
+    // TokenCheck,
+    // ifAdmin,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const Full: Items[] = req.body;
+      try {
+        await ItemsOrderList(Full).then((ItemSend) => {
+          return res.json(ItemSend); // True/False
+        });
+      } catch (e) {
+        return res.json(e);
+      }
+    }
+  );
+/** Update Location of event in View All Events Page **/
+
 // === Export Event Router === //
 export { ItemsRouter };
