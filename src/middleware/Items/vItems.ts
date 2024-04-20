@@ -198,47 +198,16 @@ const ItemNew = async (
 /** Delete All & ByID **/
 const ItemDeleteID = async (id: string) => {
   let newRes: any;
-  // if (id === undefined) {
-  //   // === Delete All Items === //
-  //   try {
-  //     await V_Items.findAll().then(
-  //       async (DeleteItemTypesID: V_Items[] | null) => {
-  //         DeleteItemTypesID?.forEach(async (data: V_Items) => {
-  //           // console.log("image ::", DeleteItemTypesID);
-  //           const ID = data?.getDataValue("id");
-  //           try {
-  //             // === check if FILE is same || new FILE is set
-  //             if (data?.getDataValue("image") !== null) {
-  //               const deleteFile: any = data?.getDataValue("image");
-  //               DeleteIMG(deleteFile); // === delete Old Image === //
-  //             }
-  //             await V_ItemsLanguage.destroy({
-  //               where: { ItemsID: ID },
-  //             });
-  //             await V_Items.destroy({ where: { id: ID } });
-  //           } catch (e) {
-  //             newRes = e;
-  //           }
-  //         });
-  //       }
-  //     );
-  //     newRes = true;
-  //   } catch (e) {
-  //     newRes = e;
-  //   }
-  //   // === Delete All ItemTypes === //
-  // } else {
-  // === Delete ItemTypes by ID === //
   try {
     await V_Items.findOne({
       where: { id: id },
-    }).then(async (DeleteItemTypesID: V_Items | null) => {
+    }).then(async (DeleteItemID: V_Items | null) => {
       // console.log("image ::", DeleteItemTypesID);
-      const ID = DeleteItemTypesID?.getDataValue("id");
+      const ID = DeleteItemID?.getDataValue("id");
       try {
         // === check if FILE is same || new FILE is set
-        if (DeleteItemTypesID?.getDataValue("image") !== null) {
-          const deleteFile: any = DeleteItemTypesID?.getDataValue("image");
+        if (DeleteItemID?.getDataValue("image") !== null) {
+          const deleteFile: any = DeleteItemID?.getDataValue("image");
           DeleteIMG(deleteFile); // === delete Old Image === //
         }
         await V_ItemsLanguage.destroy({ where: { ItemsID: ID } });
@@ -253,6 +222,39 @@ const ItemDeleteID = async (id: string) => {
   }
   // === Delete ItemTypes by ID === //
   // }
+  return newRes; // === Send true || errors
+};
+const ItemsDeleteItemType = async (ItemTypeID: string) => {
+  let newRes: any;
+  // === Delete All Items === //
+  try {
+    await V_Items.findAll({
+      where: { ItemTypeID: ItemTypeID },
+    }).then(async (DeleteItemTypesID: V_Items[] | null) => {
+      DeleteItemTypesID?.forEach(async (data: V_Items) => {
+        console.log("DeleteItemTypesID ::", DeleteItemTypesID);
+        const ID = data?.getDataValue("id");
+        try {
+          // === check if FILE is same || new FILE is set
+          if (data?.getDataValue("image") !== null) {
+            const deleteFile: any = data?.getDataValue("image");
+            DeleteIMG(deleteFile); // === delete Old Image === //
+          }
+          await V_ItemsLanguage.destroy({
+            where: { ItemsID: ID },
+          });
+          await V_Items.destroy({ where: { id: ID } });
+        } catch (e) {
+          newRes = e;
+        }
+      });
+    });
+    newRes = true;
+  } catch (e) {
+    newRes = e;
+  }
+  // === Delete All ItemTypes === //
+  console.log(newRes);
   return newRes; // === Send true || errors
 };
 /** Delete All & ByID **/
@@ -287,5 +289,6 @@ export {
   ItemNew,
   ItemsOrderList,
   ItemDeleteID,
+  ItemsDeleteItemType,
 };
 // === Export Function === //

@@ -19,6 +19,7 @@ import {
   V_ItemTypesLanguage,
 } from "../../models/Items/ItemTypeM";
 import { DeleteIMG } from "../UploadFile/UpFiles";
+import { ItemsDeleteItemType } from "./vItems";
 /** GET ItemTypes page && INFO page **/
 // === Get All ItemTypes List Info === //
 const ItemTypesGatAll = async (lang: string) => {
@@ -204,6 +205,7 @@ const ItemTypeDelete = async (id: string) => {
                 const deleteFile: any = data?.getDataValue("image");
                 DeleteIMG(deleteFile); // === delete Old Image === //
               }
+              await ItemsDeleteItemType(ID);
               await V_ItemTypesLanguage.destroy({
                 where: { ItemTypeID: ID },
               });
@@ -233,6 +235,7 @@ const ItemTypeDelete = async (id: string) => {
             const deleteFile: any = DeleteItemTypesID?.getDataValue("image");
             DeleteIMG(deleteFile); // === delete Old Image === //
           }
+          await ItemsDeleteItemType(ID);
           await V_ItemTypesLanguage.destroy({ where: { ItemTypeID: ID } });
           await V_ItemTypes.destroy({ where: { id: ID } });
         } catch (e) {
