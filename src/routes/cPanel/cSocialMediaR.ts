@@ -48,7 +48,7 @@ SocialMediaRouter.route("/")
         FacilityImageType
       ); //
       // === Console LOG === //
-      // console.log("FullSocialMedia Update :", req.body.File);
+      console.log("FullSocialMedia Update :", req.file?.path);
       // console.log("IMG to DB ::", IMG);
       // === Console LOG === //
       try {
